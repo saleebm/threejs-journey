@@ -16,8 +16,8 @@ scene.add(axesHelper);
 /**
  * Objects
  */
-const geometry = new THREE.BoxGeometry(30, 30, 10);
-const material = new THREE.MeshBasicMaterial({ color: 0x420690 });
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0x42069f });
 // add a border to the box
 const wireframeMaterial = new THREE.MeshBasicMaterial({
   color: 0x420690,
@@ -26,20 +26,21 @@ const wireframeMaterial = new THREE.MeshBasicMaterial({
 const wireframe = new THREE.Mesh(geometry, wireframeMaterial);
 scene.add(wireframe);
 const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
+// scene.add(mesh);
 
 // create a blue LineBasicMaterial
 const lineMaterial = new THREE.LineBasicMaterial({ color: 0x420690 });
 // create the geometry with some vertices
 const points = [];
-points.push(new THREE.Vector3(-10, 0, 0));
-points.push(new THREE.Vector3(0, 10, 0));
-points.push(new THREE.Vector3(10, 0, 0));
+points.push(new THREE.Vector3(-1, 0, 0));
+points.push(new THREE.Vector3(0, 1, 0));
+points.push(new THREE.Vector3(1, 0, 0));
 const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-lineGeometry.scale(4, 4, 4);
+lineGeometry.scale(2, 2, 4);
 // create the Line
 const line = new THREE.Line(lineGeometry, lineMaterial);
 scene.add(line);
+
 /**
  * Sizes
  */
@@ -52,14 +53,13 @@ const sizes = {
  * Camera
  */
 const camera = new THREE.PerspectiveCamera(
-  75,
+  12,
   sizes.width / sizes.height,
-  1,
+  0.6,
   500
 );
 // move camera back
-camera.position.set(0, 0, 69);
-camera.lookAt(new THREE.Vector3(0, 0, 0));
+camera.position.set(10, -30, 69);
 scene.add(camera);
 
 /**
@@ -80,8 +80,9 @@ renderer.setSize(sizes.width, sizes.height);
 // mesh.translateX(50);
 // rotate the mesh box around the y axis first, then x and z
 mesh.rotation.reorder("YXZ");
-mesh.rotateX(Math.PI * 0.25);
-mesh.rotateY(Math.PI * 0.25);
+mesh.rotateX(-Math.PI * 0.25);
+mesh.rotateY(-Math.PI * 0.25);
+
 console.log(mesh.rotation.toVector3());
 mesh.scale.z = 2;
 mesh.scale.y = 1;
@@ -107,6 +108,39 @@ console.log(line.position.distanceTo(camera.position));
 console.log(mesh.scale.lengthSq());
 console.log(mesh.scale.length());
 console.log(mesh.scale.distanceTo(line.scale));
+
+// camera.lookAt(line.position);
+/**
+ * Objects
+ */
+const group = new THREE.Group();
+group.scale.y = 2;
+group.rotation.y = 0.2;
+scene.add(group);
+
+const cube1 = new THREE.Mesh(
+  new THREE.BoxGeometry(1, 1, 1),
+  new THREE.MeshBasicMaterial({ color: 0xff0000 })
+);
+cube1.position.x = -1.5;
+group.add(cube1);
+
+const cube2 = new THREE.Mesh(
+  new THREE.BoxGeometry(1, 1, 1),
+  new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+);
+cube2.position.x = 0;
+group.add(cube2);
+
+const cube3 = new THREE.Mesh(
+  new THREE.BoxGeometry(1, 1, 1),
+  new THREE.MeshBasicMaterial({ color: 0x0000ff })
+);
+cube3.position.x = 1.5;
+group.add(cube3);
+
+camera.lookAt(group.position);
+camera.lookAt(new THREE.Vector3(0, -1, 0));
 // this will center the mesh box
 // console.log(mesh.position.normalize());
 renderer.render(scene, camera);
